@@ -62,8 +62,36 @@ function M.SendToRepl(opts, ...)
 	M.next_line()
 
 	local term_buf = nil
-	if opts.repl_type
-
-
+	if opts.repl_type then 
+		term_buf = vim.g.repl
+	else
+		term_buf = vim.g.term_buf
+	end
+	if term_buf == nil then 
+    M.LastChanceReplSpawn(opts.repl_type)
+  end
 	
+	vim.api.nvim_chan_send(
+		vim.api.nvim_get_option_value('channel', {buf = term_buf}), 
+		txt .. '\r'
+	)
+end
+
+-- function aliases
+function M.SendVisualSelection(repl_type)
+	M.SendToRepl({input_type = 1, repl_type = repl_type})
+end
+
+function M.SendCurrentLine(repl_type)
+	M.SendToRepl({input_type = 0, repl_type = repl_type})
+end
+
+function M.SendFileFromStartToCursor(repl_type)
+	M.SendToRepl({input_type = 2, repl_type = repl_type})
+end
+
+function M.EndReplInstance(repl_type)
+  M.SendToRepl({input_type = 3, repl_type = repl_type}, 'exit')
+end
+
 return M

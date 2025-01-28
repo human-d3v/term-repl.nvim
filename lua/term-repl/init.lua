@@ -14,12 +14,12 @@ local default_opts = {
 }
 
 function M.setup(opts)
-	local term = require('term')
-	local repl = require('repl')
+	local term = require('term-repl.term')
+	local repl = require('term-repl.repl')
 	-- merge default and passed opts
 	opts = vim.tbl_deep_extend("force", default_opts, opts or {})
 	local keymap_opts = {silent = true, noremap = true}
-	for obj in opts.repls do
+	for _, obj in ipairs(opts.repls) do
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = obj.pattern,
 			callback = function()

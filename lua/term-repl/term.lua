@@ -7,7 +7,7 @@ function M.OpenBufferTerminal(term_type)
   vim.api.nvim_exec2('belowright split | term', {output = true})
   local bufnr = vim.api.nvim_get_current_buf()
   --set global var  repl
-  if term_type then
+  if term_type ~= nil then
     vim.g.repl = bufnr
   else
     vim.g.term_buf = bufnr
@@ -83,7 +83,8 @@ function M.TerminalLinkerBuf(term_type)
       {"│", "FloatBorder"},
       {"╯", "FloatBorder"},
       {"─", "FloatBorder"},
-      {"╰", "FloatBorder"}
+      {"╰", "FloatBorder"},
+			{"│", "FloatBorder"}
     },
 	}
 	vim.cmd("highlight FloatBorder guifg=white")

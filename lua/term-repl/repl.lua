@@ -55,7 +55,7 @@ function M.SendToRepl(opts, ...)
 				txt = txt .. v
 			end
 		end
-	else:
+	else
 		txt = vim.api.nvim_get_current_line()
 	end
 

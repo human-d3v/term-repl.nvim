@@ -37,10 +37,10 @@ function M.SendToRepl(opts, ...)
 	local txt = ''
 
 	if opts.input_type == 1 then -- visual selection
-		vim.fn.setreg('x', nil)
-		print("register information: ".. vim.fn.getreg('x'))
-		vim.cmd('normal! gv"xy') --captures vis selection
-    txt = vim.fn.getreg('x')
+		vim.fn.setreg('n', nil)
+		print("register information: ".. vim.fn.getreg('n'))
+		vim.cmd('normal! gv"ny') --captures vis selection
+    txt = vim.fn.getreg('n')
 		vim.api.nvim_exec2(":'>", {})
 		-- print('txt captured in visual selection: '.. txt)
 	elseif opts.input_type == 2 then -- normal mode entire file

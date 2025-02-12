@@ -37,7 +37,7 @@ function M.SendToRepl(opts, ...)
 	local txt = ''
 
 	if opts.input_type == 1 then -- visual selection
-		vim.fn.setreg('x', nil, {})
+		vim.fn.setreg('x', nil)
 		vim.cmd('normal! gv"xy') --captures vis selection
     txt = vim.fn.getreg('x')
 		vim.api.nvim_exec2(":'>", {})

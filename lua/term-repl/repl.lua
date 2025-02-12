@@ -28,7 +28,7 @@ function M.SendToRepl(opts, ...)
 	-- expects an opts table {repl_type, input_type} where:
 	-- repl_type: the command you would send to the terminal to spawn the repl:
 	--		"node", "python3", "stata-mp"/"stata-se", "R", etc.
-	--
+	-- and 
 	-- input_type
 	--	0: send the current line to Repl
 	--  1: send the visual selection to Repl
@@ -39,7 +39,7 @@ function M.SendToRepl(opts, ...)
 	if opts.input_type == 1 then -- visual selection
 		vim.cmd('normal! gv"xy') --captures vis selection
     txt = vim.fn.getreg('x')
-    vim.api.nvim_exec2(":'>", {})
+    -- vim.api.nvim_exec2(":'>", {})
 	elseif opts.input_type == 2 then -- normal mode entire file
 		local ln, _ = unpack(vim.api.nvim_win_get_cursor(0))
 		local ln_txts = vim.api.nvim_buf_get_lines(
@@ -50,7 +50,7 @@ function M.SendToRepl(opts, ...)
 		)
 		txt = table.concat(ln_txts, "\n")
 	elseif opts.input_type == 3 then -- send text explicitly
-		if ... then 
+		if ... then
 			for i, v in ipairs({...}) do
 				txt = txt .. v
 			end

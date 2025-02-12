@@ -41,8 +41,8 @@ function M.SendToRepl(opts, ...)
 		print("register information: ".. vim.fn.getreg('n'))
 		vim.cmd('normal! gv"ny') --captures vis selection
     txt = vim.fn.getreg('n')
-		vim.api.nvim_exec2(":'>", {})
-		-- print('txt captured in visual selection: '.. txt)
+		-- vim.api.nvim_exec2(":'>", {})
+		print('txt captured in visual selection: '.. txt)
 	elseif opts.input_type == 2 then -- normal mode entire file
 		local ln, _ = unpack(vim.api.nvim_win_get_cursor(0))
 		local ln_txts = vim.api.nvim_buf_get_lines(

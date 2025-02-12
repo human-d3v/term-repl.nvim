@@ -12,7 +12,7 @@ function M.OpenBufferTerminal(term_type)
   else
     vim.g.term_buf = bufnr
   end
-	
+
 	-- spawn terminal using commnad
 	vim.api.nvim_chan_send(
 		vim.api.nvim_get_option_value('channel', {buf=bufnr}),
@@ -26,7 +26,7 @@ function M.OpenBufferTerminal(term_type)
 end
 
 function M.CloseTerminal(term_type)
-	if term_type ~= nil then 
+	if term_type ~= nil then
 		if vim.g.repl ~= nil then
 			vim.api.nvim_buf_delete(vim.g.repl, {force=true})
 		end

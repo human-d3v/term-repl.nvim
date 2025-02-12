@@ -3,7 +3,7 @@ local M = {}
 function M.next_line()
 	local current_line = vim.api.nvim_win_get_cursor(0)[1]
 	local total_lines = vim.api.nvim_buf_line_count(0)
-	
+
 	for i = current_line+1, total_lines do
     local line_content = vim.api.nvim_buf_get_lines(0, i-1, i, false)[1]
     if line_content:match('^%S') then
@@ -39,6 +39,7 @@ function M.SendToRepl(opts, ...)
 	if opts.input_type == 1 then -- visual selection
 		vim.cmd('normal! gv"xy') --captures vis selection
     txt = vim.fn.getreg('x')
+		print('txt captured in visual selection: '.. txt)
     -- vim.api.nvim_exec2(":'>", {})
 	elseif opts.input_type == 2 then -- normal mode entire file
 		local ln, _ = unpack(vim.api.nvim_win_get_cursor(0))

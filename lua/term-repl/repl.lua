@@ -52,7 +52,7 @@ function M.SendToRepl(opts, ...)
       lines[#lines] = lines[#lines]:sub(1, end_pos[3])
 			txt = table.concat(lines, "\n")
 		end
-		vim.api.nvim_win_set_cursor(0,end_pos)
+		vim.api.nvim_win_set_cursor(0,{end_pos[2], end_pos[3]})
 
 	elseif opts.input_type == 2 then -- normal mode entire file
 		local ln, _ = unpack(vim.api.nvim_win_get_cursor(0))

@@ -41,12 +41,20 @@ function M.SendToRepl(opts, ...)
 		-- {bufnum, lnum, col, off}
 		local start_pos = vim.fn.getpos("'<")
 		local end_pos = vim.fn.getpos("'>")
+		-- fix 0-indexed line subtracting one later
+		local start_pos_line = nil  
+		if start_pos[2] <= 1 then
+			start_pos_line = 1
+		else
+			start_pos_line = start_pos[2]
+		end
+
 		local lines = vim.api.nvim_buf_get_lines(
 			0,
-			start_pos[2] - 1, -- zero-indexed
+			start_pos_line - 1, -- zero-indexed
 			end_pos[2], false)
 		if #lines == 1 then
-			lines[1] = lines[1]:sub(start_pos[3], end_pos[3])
+			txt = lines[1]:sub(start_pos[3], end_pos[3])
 		else
 			lines[1] = lines[1]:sub(start_pos[3])
       lines[#lines] = lines[#lines]:sub(1, end_pos[3])

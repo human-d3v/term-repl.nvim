@@ -14,11 +14,11 @@ function M.next_line()
 end
 
 function M.LastChanceReplSpawn(term_type)
-  term = require('terminal')
+  local term = require('terminal')
   local answer = vim.fn.input('No terminal found. Do you want to open one? [y/n]\n')
   if answer:lower() == 'y' then
     term.OpenBufferTerminal(term_type)
-    term_buf = vim.g.term_buf --set variable since it didn't get set above
+    local term_buf = vim.g.term_buf --set variable since it didn't get set above
   else
     print("\nAction Cancelled")
   end
@@ -37,10 +37,23 @@ function M.SendToRepl(opts, ...)
 	local txt = ''
 
 	if opts.input_type == 1 then -- visual selection
-		vim.cmd('normal! gv"ny') --captures vis selection
-    txt = vim.fn.getreg('n')
-		-- vim.api.nvim_exec2(":'>", {})
-		print('txt captured in visual selection: '.. txt)
+		-- more robust solution?
+		-- {bufnum, lnum, col, off}
+		local start_pos = vim.fn.getpos("'<")
+		local end_pos = vim.fn.getpos("'>")
+		local lines = vim.api.nvim_buf_get_lines(
+			0,
+			start_pos[2] - 1, -- zero-indexed
+			end_pos[2], false)
+		if #lines == 1 then
+			lines[1] = lines[1]:sub(start_pos[3], end_pos[3])
+		else
+			lines[1] = lines[1]:sub(start_pos[3])
+      lines[#lines] = lines[#lines]:sub(1, end_pos[3])
+			txt = table.concat(lines, "\n")
+		end
+		vim.api.nvim_win_set_cursor(0,end_pos)
+
 	elseif opts.input_type == 2 then -- normal mode entire file
 		local ln, _ = unpack(vim.api.nvim_win_get_cursor(0))
 		local ln_txts = vim.api.nvim_buf_get_lines(
@@ -52,7 +65,7 @@ function M.SendToRepl(opts, ...)
 		txt = table.concat(ln_txts, "\n")
 	elseif opts.input_type == 3 then -- send text explicitly
 		if ... then
-			for i, v in ipairs({...}) do
+			for _, v in ipairs({...}) do
 				txt = txt .. v
 			end
 		end
@@ -63,28 +76,28 @@ function M.SendToRepl(opts, ...)
 	M.next_line()
 
 	local term_buf = nil
-	if opts.repl_type then 
+	if opts.repl_type then
 		term_buf = vim.g.repl
 	else
 		term_buf = vim.g.term_buf
 	end
-	if term_buf == nil then 
+	if term_buf == nil then
     M.LastChanceReplSpawn(opts.repl_type)
   end
-	
+
 	vim.api.nvim_chan_send(
-		vim.api.nvim_get_option_value('channel', {buf = term_buf}), 
+		vim.api.nvim_get_option_value('channel', {buf = term_buf}),
 		txt .. '\r'
 	)
 end
 
 -- function aliases
-function M.SendVisualSelection(repl_type)
-	M.SendToRepl({input_type = 1, repl_type = repl_type})
-end
-
 function M.SendCurrentLine(repl_type)
 	M.SendToRepl({input_type = 0, repl_type = repl_type})
+end
+
+function M.SendVisualSelection(repl_type)
+	M.SendToRepl({input_type = 1, repl_type = repl_type})
 end
 
 function M.SendFileFromStartToCursor(repl_type)

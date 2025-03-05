@@ -58,7 +58,7 @@ function M.TerminalLinkerBuf(term_type)
 	end
 	-- get new buf
 	local bufnr = vim.api.nvim_create_buf(false,true)
-	
+
 	-- get width of current window
 	local window_width = vim.api.nvim_win_get_width(0)
 	-- calculate new width of buf
@@ -92,7 +92,7 @@ function M.TerminalLinkerBuf(term_type)
 	local floating_win = vim.api.nvim_open_win(bufnr, true, opts)
 		vim.api.nvim_command('startinsert')
 		vim.api.nvim_win_set_buf(floating_win, term) -- link floating win to repl 
-		
+
 	-- exit insert mode on carriage return
 	vim.api.nvim_buf_set_keymap(term, "t", "<CR>",
 		[[<CR><C-\><C-n><Esc>]], {noremap=true, silent=true})
